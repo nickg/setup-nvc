@@ -23,6 +23,8 @@ jobs:
         run: npx tsc --noEmit
       - name: Run lint checks
         run: npm run lint
+      - name: Run unit tests
+        run: npm run test
 
   test:
     strategy:
