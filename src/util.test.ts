@@ -19,3 +19,9 @@ test("numbered releases with r", () => {
   expect(validateVersion("r1.16.2")).toEqual("1.16.2");
   expect(validateVersion("r1.17.0")).toEqual("1.17.0");
 });
+
+test("trims whitespace", () => {
+  expect(validateVersion(" r1.16.2   ")).toEqual("1.16.2");
+  expect(validateVersion("r1.17.0   ")).toEqual("1.17.0");
+  expect(validateVersion("  latest")).toEqual("latest");
+});

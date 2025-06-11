@@ -4,7 +4,7 @@ import { exec } from "@actions/exec";
 import { downloadTool } from "@actions/tool-cache";
 import { GetResponseDataTypeFromEndpointMethod } from "@octokit/types";
 import fs from "node:fs/promises";
-import {validateVersion} from "./util";
+import { validateVersion } from "./util";
 
 type ReleaseType = GetResponseDataTypeFromEndpointMethod<
   typeof octokit.repos.listReleases>[0];

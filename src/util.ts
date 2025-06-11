@@ -1,10 +1,12 @@
 const versionRegex = /^r?(\d+\.\d+\.\d+)$/;
 
 export function validateVersion(input: string): string | null {
-  if (input == "latest") {
-    return input;
+  const trimmed = input.trim();
+
+  if (trimmed == "latest") {
+    return trimmed;
   }
 
-  const match = versionRegex.exec(input);
+  const match = versionRegex.exec(trimmed);
   return match ? match[1] : null;
 }

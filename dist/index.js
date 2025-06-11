@@ -28291,10 +28291,11 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.validateVersion = void 0;
 const versionRegex = /^r?(\d+\.\d+\.\d+)$/;
 function validateVersion(input) {
-    if (input == "latest") {
-        return input;
+    const trimmed = input.trim();
+    if (trimmed == "latest") {
+        return trimmed;
     }
-    const match = versionRegex.exec(input);
+    const match = versionRegex.exec(trimmed);
     return match ? match[1] : null;
 }
 exports.validateVersion = validateVersion;
