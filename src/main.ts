@@ -4,6 +4,7 @@ import { exec } from "@actions/exec";
 import { downloadTool } from "@actions/tool-cache";
 import { GetResponseDataTypeFromEndpointMethod } from "@octokit/types";
 import fs from "node:fs/promises";
+import {validateVersion} from "./util";
 
 type ReleaseType = GetResponseDataTypeFromEndpointMethod<
   typeof octokit.repos.listReleases>[0];
@@ -133,12 +134,18 @@ async function run() {
   const version = core.getInput("version") || "latest";
   core.info(`Requested version is ${version}`);
 
-  if (version === "latest") {
+  const validVersion = validateVersion(version);
+  if (validVersion === null) {
+    throw new Error(
+      `Invalid version ${version}: use "latest", "X.Y.Z", or "rX.Y.Z"`);
+  }
+
+  if (validVersion === "latest") {
     const rel = await getLatestRelease();
     installRelease(rel);
   }
   else {
-    const rel = await getNamedRelease(version);
+    const rel = await getNamedRelease(validVersion);
     installRelease(rel);
   }
 }
