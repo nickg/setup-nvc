@@ -28152,7 +28152,7 @@ const tool_cache_1 = __nccwpck_require__(3472);
 const promises_1 = __importDefault(__nccwpck_require__(1455));
 const util_1 = __nccwpck_require__(4527);
 const octokit = new rest_1.Octokit({
-    auth: process.env.GITHUB_TOKEN
+    auth: core.getInput("token") || process.env.GITHUB_TOKEN
 });
 function getLatestRelease() {
     return __awaiter(this, void 0, void 0, function* () {

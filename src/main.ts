@@ -10,7 +10,7 @@ type ReleaseType = GetResponseDataTypeFromEndpointMethod<
   typeof octokit.repos.listReleases>[0];
 
 const octokit = new Octokit({
-  auth: process.env.GITHUB_TOKEN
+  auth: core.getInput("token") || process.env.GITHUB_TOKEN
 });
 
 async function getLatestRelease(): Promise<ReleaseType> {

@@ -5,6 +5,10 @@ inputs:
     description: 'Version to install (latest, or a specific version)'
     required: false
     default: latest
+  token:
+    description: 'The GitHub token to use when calling the API'
+    default: ${{ github.token }}
+    required: false
 runs:
   using: 'node20'
   main: 'dist/index.js'
