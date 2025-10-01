@@ -112,7 +112,7 @@ async function installWindows(rel: ReleaseType) {
     throw new Error("GITHUB_PATH not set");
   }
 
-  await fs.appendFile(pathFile, "C:\\Program Files\\NVC\\bin\n");
+  await fs.appendFile(pathFile, "C:\\Program\\ Files\\NVC\\bin\n");
 }
 
 async function installRelease(rel: ReleaseType) {

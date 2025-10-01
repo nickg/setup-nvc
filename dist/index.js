@@ -28242,7 +28242,7 @@ function installWindows(rel) {
         if (!pathFile) {
             throw new Error("GITHUB_PATH not set");
         }
-        yield promises_1.default.appendFile(pathFile, "C:\\Program Files\\NVC\\bin\n");
+        yield promises_1.default.appendFile(pathFile, "C:\\Program\\ Files\\NVC\\bin\n");
     });
 }
 function installRelease(rel) {
