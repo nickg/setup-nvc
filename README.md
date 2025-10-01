@@ -20,5 +20,9 @@ Windows does not use the system `PATH` environment variable so you need
 to add it manually:
 
 ```sh
-export PATH=/c/Program\ Files/NVC/bin:$PATH
+- uses: nickg/setup-nvc@v1
+  with:
+    version: latest
+- run: |
+    echo "/c/Program\ Files/NVC/bin" >> $GITHUB_PATH
 ```
