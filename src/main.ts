@@ -4,6 +4,7 @@ import { exec } from "@actions/exec";
 import { downloadTool } from "@actions/tool-cache";
 import { GetResponseDataTypeFromEndpointMethod } from "@octokit/types";
 import fs from "node:fs/promises";
+import os from "node:os";
 import { validateVersion } from "./util";
 
 type ReleaseType = GetResponseDataTypeFromEndpointMethod<
@@ -115,12 +116,76 @@ async function installWindows(rel: ReleaseType) {
   await fs.appendFile(pathFile, "C:\\Program Files\\NVC\\bin\n");
 }
 
+async function installMacOS(rel: ReleaseType) {
+  await exec("brew", ["update"]);
+  await exec("brew", [
+    "install", "llvm", "pkgconf", "check", "zstd",
+  ]);
+
+  const tmp = process.env["RUNNER_TEMP"];
+  if (!tmp) {
+    throw new Error("RUNNER_TEMP not set");
+  }
+
+  let url = "", file = "";
+  for (const a of rel.assets) {
+    if (a.name.endsWith(".tar.gz")) {
+      core.info(`Found matching asset ${a.name}`);
+      url = a.browser_download_url;
+      file = a.name;
+      break;
+    }
+  }
+
+  if (!url) {
+    throw new Error(`No source tarball in release ${rel.name}`);
+  }
+
+  const tarball = await downloadFile(url, file);
+
+  const srcDir = `${tmp}/nvc-src`;
+  await fs.mkdir(srcDir, { recursive: true });
+  await exec("tar", [
+    "xzf", tarball, "-C", srcDir, "--strip-components=1",
+  ]);
+
+  let llvmPrefix = "";
+  await exec("brew", ["--prefix", "llvm"], {
+    listeners: {
+      stdout: (data) => { llvmPrefix += data.toString(); }
+    }
+  });
+  llvmPrefix = llvmPrefix.trim();
+
+  const buildDir = `${tmp}/nvc-build`;
+  await fs.mkdir(buildDir, { recursive: true });
+
+  const ncpu = os.cpus().length.toString();
+
+  await exec(`${srcDir}/configure`, [
+    `--with-llvm=${llvmPrefix}/bin/llvm-config`,
+    "--disable-silent-rules",
+  ], { cwd: buildDir });
+  await exec("make", [`-j${ncpu}`], { cwd: buildDir });
+  await exec("sudo", ["make", "install"], { cwd: buildDir });
+
+  const pathFile = process.env["GITHUB_PATH"];
+  if (!pathFile) {
+    throw new Error("GITHUB_PATH not set");
+  }
+
+  await fs.appendFile(pathFile, "/usr/local/bin\n");
+}
+
 async function installRelease(rel: ReleaseType) {
   if (process.platform === "linux") {
-    installLinux(rel);
+    await installLinux(rel);
   }
   else if (process.platform === "win32") {
-    installWindows(rel);
+    await installWindows(rel);
+  }
+  else if (process.platform === "darwin") {
+    await installMacOS(rel);
   }
   else {
     throw new Error("Unsupported platform");
@@ -142,11 +207,11 @@ async function run() {
 
   if (validVersion === "latest") {
     const rel = await getLatestRelease();
-    installRelease(rel);
+    await installRelease(rel);
   }
   else {
     const rel = await getNamedRelease(validVersion);
-    installRelease(rel);
+    await installRelease(rel);
   }
 }
 
