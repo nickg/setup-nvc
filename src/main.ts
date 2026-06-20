@@ -36,7 +36,7 @@ async function getNamedRelease(name: string): Promise<ReleaseType> {
     });
     return resp.data;
   }
-  catch (e) {
+  catch {
     throw new Error(`No release ${name}`);
   }
   finally {
