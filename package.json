@@ -26,14 +26,14 @@
   "homepage": "https://github.com/nickg/setup-nvc#readme",
   "type": "module",
   "devDependencies": {
-    "@octokit/types": "^13.5.0",
     "@eslint/js": "^10.0.1",
+    "@octokit/types": "^13.5.0",
     "@stylistic/eslint-plugin": "^5.10.0",
     "@types/jest": "^29.5.14",
     "@types/node": "^20.19.37",
     "@typescript-eslint/eslint-plugin": "^8.61.1",
     "@typescript-eslint/parser": "^8.61.1",
-    "@vercel/ncc": "^0.38.4",
+    "@vercel/ncc": "^0.44.0",
     "eslint": "^10.5.0",
     "globals": "^17.4.0",
     "jest": "^29.7.0",
@@ -43,9 +43,9 @@
     "typescript": "^4.9.5"
   },
   "dependencies": {
-    "@actions/core": "^1.11.1",
-    "@actions/exec": "^1.1.1",
-    "@actions/tool-cache": "^2.0.1",
+    "@actions/core": "^3.0.1",
+    "@actions/exec": "^3.0.0",
+    "@actions/tool-cache": "^4.0.0",
     "@octokit/rest": "^21.0.1"
   }
 }
